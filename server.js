@@ -6,10 +6,17 @@ function start(route, handle) {
     var pathname = url.parse(request.url).pathname;
     console.log("Request for " + pathname + " received.");
     
-    route(handle, pathname, response, request);  
+    var postData = "";
+    request.addListener('data', function(postDataChunk) {
+      postData += postDataChunk;
+    });
+    
+    request.addListener('end', function() {
+      route(handle, pathname, response, postData);
+    });
   }
   
-  http.createServer(onRequest).listen(8888);
+  http.createServer(onRequest).listen(3000);
   console.log("Server has started.");
 }
 
