@@ -16,7 +16,7 @@ function start(route, handle) {
     });
   }
   
-  http.createServer(onRequest).listen(80);
+  http.createServer(onRequest).listen(3000);
   console.log("Server has started.");
 }
 
