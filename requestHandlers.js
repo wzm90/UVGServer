@@ -16,22 +16,29 @@ function upload(response, postData) {
   
   // send postData to parse
   var test = new Test();
-  var data = parseFloat(querystring.parse(postData).index);
-  test.set("UV_index", data);
-  test.save(null, {
-    success: function(test) {
-      // Execute any logic that should take place after the object is saved.
-      console.log("Successed: %f", data);
-      render(response);
-    },
-    error: function(test, error) {
-      // Execute any logic that should take place if the save fails.
-      console.log("Failed: %s", postData);
-      response.writeHead(404, {"Content-Type" : "text/html"});
-      response.write("data uploading failed!");
-      response.end(); 
-    }
-  }); 
+  try {
+    var result = JSON.parse(postData);
+    var data = parseFloat(result.uv);
+    test.set("UV_index", data);
+    test.save(null, {
+      success: function(test) {
+        // Execute any logic that should take place after the object is saved.
+        console.log(postData);
+        render(response);
+      },
+      error: function(test, error) {
+        // Execute any logic that should take place if the save fails.
+        console.log("Failed: %s", postData);
+        response.writeHead(404, {"Content-Type" : "text/html"});
+        response.write("data uploading failed!");
+        response.end(); 
+      }
+    }); 
+  } catch(e) {
+    console.log("Error parsing....");
+    console.log(postData);
+    console.log(e);
+  }
 }
 
 exports.upload = upload;
